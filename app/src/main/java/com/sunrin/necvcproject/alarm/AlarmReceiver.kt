@@ -7,13 +7,17 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 
+
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        val pendingIntent = AlarmUtils.getExistPendingIntent(context)
+        pendingIntent?.cancel()
+
         val keyguardManager = context.getSystemService(KeyguardManager::class.java)
         Log.d("MyTag", "locked ${keyguardManager.isKeyguardLocked}")
 
         if (!keyguardManager.isKeyguardLocked) {
-            Toast.makeText(context, "사용시간 초과!", Toast.LENGTH_LONG).show()
+            context.sendBroadcast(Intent("START_OVERLAY"))
         }
     }
 }

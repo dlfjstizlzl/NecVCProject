@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -15,6 +16,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,18 +79,14 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             context,
             Intent(context, AppForegroundService::class.java)
         )
+
+        val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
+        pref.edit().putBoolean("enable", true).putLong("usableTime", 5 * 1000).putLong("initTime", 5 * 1000).apply()
     }
 
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    Button(onClick = {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NecVCProjectTheme {
-        Greeting("Android")
+    }) {
+        Text(text = "Hello")
     }
 }

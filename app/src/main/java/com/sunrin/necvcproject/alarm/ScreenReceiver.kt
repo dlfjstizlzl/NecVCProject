@@ -1,50 +1,51 @@
 package com.sunrin.necvcproject.alarm
 
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
-import androidx.core.app.AlarmManagerCompat
+import kotlin.math.max
 
 class ScreenReceiver : BroadcastReceiver() {
+    companion object {
+        var lastScreenOn: Long? = null
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
-        val action = intent.action ?: "N/A"
-        val alarmManager = context.getSystemService(AlarmManager::class.java)
-
-        val prevAlarmIntent = PendingIntent.getBroadcast(
-            context, 0,
-            Intent(context, AlarmReceiver::class.java),
-            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        Log.d("MyTag", "prevAlarm ${action} ${prevAlarmIntent != null}")
-
-        if (prevAlarmIntent != null) {
-            alarmManager.cancel(prevAlarmIntent)
-            prevAlarmIntent.cancel()
+        val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
+        val enabled = pref.getBoolean("enable", false)
+        val overlay = pref.getBoolean("overlay", false)
+        if (!enabled || overlay) {
+            return
         }
 
-        if (intent.action.equals(Intent.ACTION_USER_PRESENT)) {
-            val alarmIntent = PendingIntent.getBroadcast(
-                context,
-                0,
-                Intent(context, AlarmReceiver::class.java).apply {
+        val alarmManager = context.getSystemService(AlarmManager::class.java)
+        AlarmUtils.cancelExistAlarm(alarmManager, context)
 
-                },
-                PendingIntent.FLAG_IMMUTABLE
-            )
+        val usableTime = pref.getLong("usableTime", 0)
+        when {
+            intent.action.equals(Intent.ACTION_USER_PRESENT) || intent.action.equals("ALARM_RESTART") -> {
+                Log.d("MyTag", "alarm register $usableTime ${intent.action}")
 
-            AlarmManagerCompat.setExactAndAllowWhileIdle(
-                alarmManager,
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + (5 * 1000),
-                alarmIntent!!
-            )
+                val alarmIntent = AlarmUtils.createPendingIntent(context)
+                AlarmUtils.createAlarm(alarmManager, alarmIntent, usableTime)
+                lastScreenOn = SystemClock.elapsedRealtime()
+            }
 
-            Log.d("MyTag", "alarm registered")
+            intent.action.equals(Intent.ACTION_SCREEN_OFF) -> {
+                if (lastScreenOn != null) {
+                    val usedTime = SystemClock.elapsedRealtime() - lastScreenOn!!
+                    val remainTime = max(usableTime - usedTime, 0L)
+
+                    Log.d("MyTag", "usedTime: $usedTime remainTime: $remainTime")
+
+                    pref.edit().putLong("usableTime", remainTime).apply()
+
+                    lastScreenOn = null
+                }
+            }
         }
     }
 }
