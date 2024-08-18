@@ -9,28 +9,46 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
+)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+val LightColorPalette = ColorPalette(
+    text = TextColors(
+        primary = Color(0xFF272523),
+        secondary = Color(0xFFB2B1AF)
+    ),
+    primary = PrimaryColors(
+        primary = Color(0xFFF66020),
+        secondary = Color(0xFFFFEAE1)
+    ),
+    background = BackgroundColors(
+        primary = Color(0xFFF5F5F5),
+        secondary = Color(0xFFFFFFFF)
+    )
+)
+val DarkColorPalette = ColorPalette(
+    text = TextColors(
+        primary = Color(0xFFFFFFFF),
+        secondary = Color(0xFF484848)
+    ),
+    primary = PrimaryColors(
+        primary = Color(0xFFE0591F),
+        secondary = Color(0xFF2D211C)
+    ),
+    background = BackgroundColors(
+        primary = Color(0xFF161616),
+        secondary = Color(0xFF1C1C1C)
+    )
 )
 
 @Composable
@@ -49,10 +67,17 @@ fun NecVCProjectTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    val customColorsPalette =
+        if (darkTheme) DarkColorPalette
+        else LightColorPalette
 
-    MaterialTheme(
+    CompositionLocalProvider(
+        LocalColorPalette provides customColorsPalette
+    ) {
+        MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
         content = content
     )
+    }
 }

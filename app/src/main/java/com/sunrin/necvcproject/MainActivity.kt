@@ -5,27 +5,31 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.sunrin.necvcproject.alarm.AppForegroundService
+import com.sunrin.necvcproject.screen.StartScreen
 import com.sunrin.necvcproject.ui.theme.NecVCProjectTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,11 +38,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NecVCProjectTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(
+                    topBar = {}
+                ){ innerpadding ->
+                    Greeting(innerpadding)
                 }
             }
         }
@@ -46,7 +49,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(innerpadding: PaddingValues) {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -64,6 +67,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     notificationManager.createNotificationChannel(mChannel)
 
+    Settings.canDrawOverlays(context)
+
+    Intent(
+        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+        Uri.fromParts("package", "PACKAGE_NAME", null)
+    )
+
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
@@ -80,13 +90,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             Intent(context, AppForegroundService::class.java)
         )
 
-        val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
-        pref.edit().putBoolean("enable", true).putLong("usableTime", 5 * 1000).putLong("initTime", 5 * 1000).apply()
     }
-
-    Button(onClick = {
-
-    }) {
-        Text(text = "Hello")
+    //UI
+    Surface(
+        modifier = Modifier.fillMaxSize().padding(innerpadding)
+    ){
+        StartScreen()
     }
 }

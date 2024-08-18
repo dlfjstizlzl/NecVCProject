@@ -47,7 +47,7 @@
 
         <service
             android:name=".alarm.AppForegroundService"
-            android:foregroundServiceType="specialUse"
+            android:foregroundServiceType=""
             android:permission="android.permission.SYSTEM_ALERT_WINDOW">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"

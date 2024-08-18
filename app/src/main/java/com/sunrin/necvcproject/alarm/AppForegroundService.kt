@@ -6,23 +6,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MANIFEST
 import android.graphics.PixelFormat
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
@@ -33,7 +26,7 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sunrin.necvcproject.R
-import com.sunrin.necvcproject.ui.theme.NecVCProjectTheme
+import com.sunrin.necvcproject.screen.OverlayScreen
 
 
 class AppForegroundService : LifecycleService(), SavedStateRegistryOwner {
@@ -92,6 +85,7 @@ class AppForegroundService : LifecycleService(), SavedStateRegistryOwner {
         unregisterReceiver(localReceiver)
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val notificationManager = getSystemService(NotificationManager::class.java)
 
@@ -101,7 +95,7 @@ class AppForegroundService : LifecycleService(), SavedStateRegistryOwner {
         notificationManager.notify(1, notification)
 
         ServiceCompat.startForeground(
-            this, 1, notification, 0
+            this, 1, notification, FOREGROUND_SERVICE_TYPE_MANIFEST
         )
 
         return super.onStartCommand(intent, flags, startId)
@@ -123,7 +117,6 @@ class AppForegroundService : LifecycleService(), SavedStateRegistryOwner {
             view = inflate.inflate(R.layout.layout_overlay, null)
             view!!.setViewTreeLifecycleOwner(this)
             view!!.setViewTreeSavedStateRegistryOwner(this)
-
             view!!.findViewById<ComposeView>(R.id.composeView).setContent {
                 OverlayScreen(this)
             }
