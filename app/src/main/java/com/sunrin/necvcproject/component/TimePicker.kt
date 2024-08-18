@@ -1,6 +1,5 @@
 package com.sunrin.necvcproject.component
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.BasicTextField
@@ -15,13 +14,13 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.sunrin.necvcproject.ui.theme.LocalColorPalette
 import com.sunrin.necvcproject.ui.theme.Pretendard
+
 class TimeTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
         val trimmed = if (text.text.length >= 6) text.text.substring(0..5) else text.text
@@ -48,6 +47,7 @@ class TimeTransformation : VisualTransformation {
         return TransformedText(AnnotatedString(out.toString()), offsetMapping)
     }
 }
+
 fun parseTimeToMillis(text: String): Long {
     val parts = text.chunked(2)
     val hours = parts.getOrNull(0)?.toIntOrNull() ?: 0
@@ -55,6 +55,7 @@ fun parseTimeToMillis(text: String): Long {
     val seconds = parts.getOrNull(2)?.toIntOrNull() ?: 0
     return (hours * 3600 + minutes * 60 + seconds) * 1000L
 }
+
 fun formatMillisToTime(millis: Long): String {
     val totalSeconds = millis / 1000
     val hours = totalSeconds / 3600
@@ -69,21 +70,21 @@ fun TimePicker(
     isEnable: Boolean,
     currentTimeInMillis: Long
 ) {
-    val textValue = formatMillisToTime(currentTimeInMillis)
-    var text by remember { mutableStateOf(TextFieldValue(textValue)) }
-    if (!isEnable){
-        text = TextFieldValue(formatMillisToTime(currentTimeInMillis))
+    var text by remember { mutableStateOf("00:00:00") }
+    LaunchedEffect(currentTimeInMillis) {
+        val textValue = formatMillisToTime(currentTimeInMillis)
+        text = textValue
     }
-    Log.d("MyTag", "바뀐다~: $text")
+
     Column {
         BasicTextField(
             enabled = isEnable,
             value = text,
             onValueChange = {
-                if (it.text.length <= 6) {
+                if (it.length <= 6) {
                     text = it
-                    if (isEnable){
-                    onTimeChange(parseTimeToMillis(text.text))
+                    if (isEnable) {
+                        onTimeChange(parseTimeToMillis(text))
                     }
                 }
             },
