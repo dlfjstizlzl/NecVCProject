@@ -37,7 +37,7 @@ fun StartScreen() {
     val context = LocalContext.current
     val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
     val (timeInMillis, setTimeInMillis) = remember { mutableStateOf(pref.getLong("initTime",0)) }
-    var isEnable by remember { mutableStateOf(!pref.getBoolean("enable",true)) }
+    var isEnable by remember { mutableStateOf(!(pref.getBoolean("enable",true))) }
     val configuration = LocalConfiguration.current
     var currentTimeInMillis by remember { mutableStateOf(0L) }
     val screenHeight = configuration.screenHeightDp.dp
