@@ -28,9 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.sunrin.necvcproject.alarm.AppForegroundService
 import com.sunrin.necvcproject.screen.StartScreen
 import com.sunrin.necvcproject.ui.theme.NecVCProjectTheme

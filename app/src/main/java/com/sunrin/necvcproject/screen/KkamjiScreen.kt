@@ -23,17 +23,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.sunrin.necvcproject.component.Kkamji
 import com.sunrin.necvcproject.component.TitleText
-import com.sunrin.necvcproject.data.QuizList
+import com.sunrin.necvcproject.data.Quiz
 
 @Composable
 fun KkamjiScreen(
+    quizList: List<Quiz>,
     navigate: () -> Unit
 ) {
     val context = LocalContext.current
     val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
     val time = millsToMinutes(pref.getLong("initTime", 0))
-    val text by remember { mutableStateOf(QuizList) }
-    val booleanList = remember { mutableStateListOf(*Array(text.size) { false }) }
+    val booleanList = remember { mutableStateListOf(*Array(quizList.size) { false }) }
 
 
     val configuration = LocalConfiguration.current
@@ -68,9 +68,9 @@ fun KkamjiScreen(
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(16.dp) // Spacer 역할을 대신할 수 있음
             ) {
-                text.forEachIndexed { index, item ->
+                quizList.forEachIndexed { index, quiz ->
                     Kkamji(
-                        scrap = item,
+                        scrap = quiz.sentence,
                         isCollect = { booleanList[index] = it }
                     )
                 }

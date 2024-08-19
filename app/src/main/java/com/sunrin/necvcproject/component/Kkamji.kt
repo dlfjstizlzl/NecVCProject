@@ -1,7 +1,6 @@
 package com.sunrin.necvcproject.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -28,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sunrin.necvcproject.ui.theme.LocalColorPalette
@@ -38,10 +35,10 @@ import com.sunrin.necvcproject.ui.theme.NecVCProjectTheme
 fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
     var isFinished by remember { mutableStateOf(false) }
     val (text, setText) = remember { mutableStateOf("") }
-    if(text == scrap){
+    if (text == scrap) {
         isFinished = true
         isCollect(true)
-    }else{
+    } else {
         isFinished = false
         isCollect(false)
     }
@@ -59,7 +56,7 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp, 12.dp),
-        ){
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -112,12 +109,13 @@ fun PreviewKkamji() {
 }
 
 @Composable
-fun QuizKkamji(scrap: String, answer : String, isCollect: (Boolean) -> Unit) {
-    var isFinished by remember { mutableStateOf(false) }
+fun QuizKkamji(scrap: String, answer: String, isCollect: (Boolean) -> Unit) {
     val (text, setText) = remember { mutableStateOf("") }
-    isFinished = text != ""
     var expandedState by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+
+    val isFinished = text == answer
+
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -130,7 +128,7 @@ fun QuizKkamji(scrap: String, answer : String, isCollect: (Boolean) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp, 12.dp),
-        ){
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -150,7 +148,8 @@ fun QuizKkamji(scrap: String, answer : String, isCollect: (Boolean) -> Unit) {
                     value = text,
                     onValueChange = {
                         setText(it)
-                        if(it == answer) isCollect(true) },
+                        if (it == answer) isCollect(true)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
