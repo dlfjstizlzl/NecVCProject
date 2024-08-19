@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import com.sunrin.necvcproject.alarm.AppForegroundService
 import com.sunrin.necvcproject.data.ProcessedQuizList
 
@@ -19,7 +18,6 @@ fun OverlayScreen(
     service: AppForegroundService
 ) {
     NecVCProjectTheme {
-        val context = LocalContext.current
         val currentScreen = remember { mutableStateOf("Kkamji") }
         var inCorrect by remember { mutableStateOf(0) }
         val quizList = remember {
@@ -28,9 +26,14 @@ fun OverlayScreen(
 
         Surface(modifier = Modifier.fillMaxSize()) {
             when (currentScreen.value) {
-                "Kkamji" -> KkamjiScreen(quizList = quizList){ currentScreen.value = "Quiz" }
-                "Quiz" -> QuizScreen(navigate = {currentScreen.value="Result"}, sendResult = {inCorrect = it}, quizList = quizList)
-                "Result"-> ResultScreen(inCorrect,{currentScreen.value="Kkamji"},{service.closeOverlay()})
+                "Kkamji" -> KkamjiScreen(quizList = quizList) { currentScreen.value = "Quiz" }
+                "Quiz" -> QuizScreen(navigate = { currentScreen.value = "Result" },
+                    sendResult = { inCorrect = it },
+                    quizList = quizList
+                )
+                "Result" -> ResultScreen(inCorrect,
+                    { currentScreen.value = "Kkamji" },
+                    { service.closeOverlay() })
             }
         }
     }

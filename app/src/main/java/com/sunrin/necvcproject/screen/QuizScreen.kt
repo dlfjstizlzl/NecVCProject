@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +27,6 @@ import com.sunrin.necvcproject.component.ResultButton
 import com.sunrin.necvcproject.component.TitleText
 import com.sunrin.necvcproject.data.Quiz
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun QuizScreen(quizList: List<Quiz>, navigate: () -> Unit, sendResult: (Int) -> Unit) {
     val context = LocalContext.current
@@ -39,33 +37,35 @@ fun QuizScreen(quizList: List<Quiz>, navigate: () -> Unit, sendResult: (Int) -> 
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp, 22.dp),
-        bottomBar = {
-                ResultButton(text = "채점하기", todo = {
-                    sendResult(booleanList.count{!it})
-                    navigate()})
-            Button(onClick = {
-                   sendResult(0)
-                    navigate()
-                }) {
-                    Text(text = "Skip~")
-                }
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .padding(12.dp, 22.dp), bottomBar = {
+        ResultButton(text = "채점하기", todo = {
+            sendResult(booleanList.count { !it })
+            navigate()
+        })
+        Button(onClick = {
+            sendResult(0)
+            navigate()
+        }) {
+            Text(text = "Skip~")
         }
-    ){paddingValues ->
-        Column (
+    }) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues).consumeWindowInsets(paddingValues)
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
         ) {
-            Spacer(modifier = Modifier
-                .height(screenHeight / 15)
-                .background(Color.Black))
+            Spacer(
+                modifier = Modifier
+                    .height(screenHeight / 15)
+                    .background(Color.Black)
+            )
             TitleText(text = time.toString())
-            Spacer(modifier = Modifier
-                .height(screenHeight / 20))
+            Spacer(
+                modifier = Modifier.height(screenHeight / 20)
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize()

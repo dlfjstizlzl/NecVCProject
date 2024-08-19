@@ -66,9 +66,7 @@ fun formatMillisToTime(millis: Long): String {
 
 @Composable
 fun TimePicker(
-    onTimeChange: (Long) -> Unit,
-    isEnable: Boolean,
-    currentTimeInMillis: Long
+    onTimeChange: (Long) -> Unit, isEnable: Boolean, currentTimeInMillis: Long
 ) {
     var text by remember { mutableStateOf("00:00:00") }
     LaunchedEffect(currentTimeInMillis) {

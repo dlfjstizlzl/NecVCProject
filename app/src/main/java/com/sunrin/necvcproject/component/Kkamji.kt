@@ -32,35 +32,30 @@ import com.sunrin.necvcproject.ui.theme.LocalColorPalette
 import com.sunrin.necvcproject.ui.theme.NecVCProjectTheme
 
 @Composable
-fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
-    var isFinished by remember { mutableStateOf(false) }
+fun Kkamji(sentence: String, isCollect: (Boolean) -> Unit) {
     val (text, setText) = remember { mutableStateOf("") }
-    if (text == scrap) {
-        isFinished = true
+    val isFinished = text == sentence
+
+    if (isFinished) {
         isCollect(true)
     } else {
-        isFinished = false
         isCollect(false)
     }
+
     var expandedState by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
+    Card(modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = LocalColorPalette.current.background.secondary),
         onClick = {
             expandedState = !expandedState
-        }
-    ) {
+        }) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp, 12.dp),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
                     modifier = Modifier.size(20.dp),
@@ -68,18 +63,16 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
                     onClick = {},
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = scrap)
+                Text(text = sentence)
             }
             if (expandedState) {
                 Spacer(modifier = Modifier.height(12.dp))
-                BasicTextField(
-                    value = text,
+                BasicTextField(value = text,
                     onValueChange = { setText(it) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            LocalColorPalette.current.background.primary,
-                            RoundedCornerShape(8.dp)
+                            LocalColorPalette.current.background.primary, RoundedCornerShape(8.dp)
                         )
                         .padding(12.dp, 10.dp)
                         .focusRequester(focusRequester),
@@ -90,8 +83,7 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
                         } else {
                             innerTextField()
                         }
-                    }
-                )
+                    })
                 LaunchedEffect(Unit) {
                     focusRequester.requestFocus()
                 }
@@ -104,7 +96,7 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
 @Composable
 fun PreviewKkamji() {
     NecVCProjectTheme {
-        Kkamji(scrap = "test", isCollect = {})
+        Kkamji(sentence = "test", isCollect = {})
     }
 }
 
@@ -116,23 +108,18 @@ fun QuizKkamji(scrap: String, answer: String, isCollect: (Boolean) -> Unit) {
 
     val isFinished = text == answer
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
+    Card(modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = LocalColorPalette.current.background.secondary),
         onClick = {
             expandedState = !expandedState
-        }
-    ) {
+        }) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp, 12.dp),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(
                     modifier = Modifier.size(20.dp),
@@ -144,8 +131,7 @@ fun QuizKkamji(scrap: String, answer: String, isCollect: (Boolean) -> Unit) {
             }
             if (expandedState) {
                 Spacer(modifier = Modifier.height(12.dp))
-                BasicTextField(
-                    value = text,
+                BasicTextField(value = text,
                     onValueChange = {
                         setText(it)
                         if (it == answer) isCollect(true)
@@ -153,8 +139,7 @@ fun QuizKkamji(scrap: String, answer: String, isCollect: (Boolean) -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            LocalColorPalette.current.background.primary,
-                            RoundedCornerShape(8.dp)
+                            LocalColorPalette.current.background.primary, RoundedCornerShape(8.dp)
                         )
                         .padding(12.dp, 10.dp)
                         .focusRequester(focusRequester),
@@ -165,8 +150,7 @@ fun QuizKkamji(scrap: String, answer: String, isCollect: (Boolean) -> Unit) {
                         } else {
                             innerTextField()
                         }
-                    }
-                )
+                    })
                 LaunchedEffect(Unit) {
                     focusRequester.requestFocus()
                 }

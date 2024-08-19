@@ -38,9 +38,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NecVCProjectTheme {
-                Scaffold(
-                    topBar = {}
-                ){ innerpadding ->
+                Scaffold(topBar = {}) { innerpadding ->
                     Greeting(innerpadding)
                 }
             }
@@ -49,7 +47,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(innerpadding: PaddingValues) {
+fun Greeting(innerPadding: PaddingValues) {
     val context = LocalContext.current
 
     // 권한 요청 런처 설정
@@ -84,11 +82,13 @@ fun Greeting(innerpadding: PaddingValues) {
             checkAndStartService(context)
         }
     }
-    
+
     //UI
     Surface(
-        modifier = Modifier.fillMaxSize().padding(innerpadding)
-    ){
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
         StartScreen()
     }
 }
@@ -96,8 +96,7 @@ fun Greeting(innerpadding: PaddingValues) {
 fun checkAndStartService(context: Context) {
     checkOverlayPermission(context) {
         ContextCompat.startForegroundService(
-            context,
-            Intent(context, AppForegroundService::class.java)
+            context, Intent(context, AppForegroundService::class.java)
         )
         Log.d("MyTag", "서비스 시작")
     }
@@ -139,9 +138,9 @@ fun checkPermissionsAsync(context: Context, onSuccess: () -> Unit) {
     val handler = android.os.Handler(Looper.getMainLooper())
     handler.postDelayed(object : Runnable {
         override fun run() {
-            if (Settings.canDrawOverlays(context) &&
-                (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || context.getSystemService(
-                    AlarmManager::class.java).canScheduleExactAlarms())
+            if (Settings.canDrawOverlays(context) && (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || context.getSystemService(
+                    AlarmManager::class.java
+                ).canScheduleExactAlarms())
             ) {
                 onSuccess()
             } else {

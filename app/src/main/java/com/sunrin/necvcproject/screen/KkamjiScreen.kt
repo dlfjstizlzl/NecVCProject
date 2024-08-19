@@ -13,9 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -27,8 +25,7 @@ import com.sunrin.necvcproject.data.Quiz
 
 @Composable
 fun KkamjiScreen(
-    quizList: List<Quiz>,
-    navigate: () -> Unit
+    quizList: List<Quiz>, navigate: () -> Unit
 ) {
     val context = LocalContext.current
     val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
@@ -40,26 +37,25 @@ fun KkamjiScreen(
     val screenHeight = configuration.screenHeightDp.dp
     val scrollState = rememberScrollState()
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp, 22.dp),
-        bottomBar = {
-            Button(onClick = {navigate()}) {
-                Text(text = "Skip~")
-            }
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .padding(12.dp, 22.dp), bottomBar = {
+        Button(onClick = { navigate() }) {
+            Text(text = "Skip~")
         }
-    ) { paddingValues ->
+    }) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Spacer(modifier = Modifier
-                .height(screenHeight / 15))
+            Spacer(
+                modifier = Modifier.height(screenHeight / 15)
+            )
             TitleText(text = time.toString())
-            Spacer(modifier = Modifier
-                .height(screenHeight / 20))
+            Spacer(
+                modifier = Modifier.height(screenHeight / 20)
+            )
 
             // Column 사용
             Column(
@@ -69,10 +65,7 @@ fun KkamjiScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp) // Spacer 역할을 대신할 수 있음
             ) {
                 quizList.forEachIndexed { index, quiz ->
-                    Kkamji(
-                        scrap = quiz.sentence,
-                        isCollect = { booleanList[index] = it }
-                    )
+                    Kkamji(sentence = quiz.sentence, isCollect = { booleanList[index] = it })
                 }
             }
         }

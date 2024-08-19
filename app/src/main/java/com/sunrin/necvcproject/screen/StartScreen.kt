@@ -3,14 +3,8 @@ package com.sunrin.necvcproject.screen
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
-import android.os.Looper
 import android.os.SystemClock
-import android.provider.Settings
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,15 +23,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.sunrin.necvcproject.alarm.AlarmUtils
-import com.sunrin.necvcproject.alarm.ScreenReceiver.Companion.lastScreenOn
 import com.sunrin.necvcproject.component.CustomButton
 import com.sunrin.necvcproject.component.StartTitle
 import com.sunrin.necvcproject.component.TimePicker
 import kotlinx.coroutines.delay
-import java.security.Permission
-import java.security.Permissions
 import kotlin.math.max
 
 @Preview(showBackground = true)
@@ -46,9 +35,9 @@ import kotlin.math.max
 fun StartScreen() {
     val context = LocalContext.current
     val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
-    val (timeInMillis, setTimeInMillis) = remember { mutableStateOf(pref.getLong("initTime",0)) }
-    var isEnable by remember { mutableStateOf(!pref.getBoolean("enable",false)) }
-    var currentTimeInMillis by remember { mutableStateOf(pref.getLong("initTime",0)) }
+    val (timeInMillis, setTimeInMillis) = remember { mutableStateOf(pref.getLong("initTime", 0)) }
+    var isEnable by remember { mutableStateOf(!pref.getBoolean("enable", false)) }
+    var currentTimeInMillis by remember { mutableStateOf(pref.getLong("initTime", 0)) }
 
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -60,10 +49,9 @@ fun StartScreen() {
                 val lastScreenOn = pref.getLong("lastScreenOn", 0L)
                 val usableTime = pref.getLong("usableTime", 0L)
                 val usedTime = SystemClock.elapsedRealtime() - lastScreenOn
-                var remainTime = max(usableTime - usedTime, 0L)
+                val remainTime = max(usableTime - usedTime, 0L)
                 currentTimeInMillis = remainTime
                 delay(1000L) // 1초 대기
-//                remainTime -= 1000L
             }
         }
     }
@@ -81,16 +69,13 @@ fun StartScreen() {
                 TimePicker(
                     onTimeChange = { time ->
                         setTimeInMillis(time)
-                    },
-                    isEnable,
-                    currentTimeInMillis
+                    }, isEnable, currentTimeInMillis
                 )
             }
         }
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             CustomButton(
-                text = "집중모드 시작하기",
-                todo = {
+                text = "집중모드 시작하기", todo = {
                     if (!isEnable) {
                         pref.edit().putBoolean("enable", false).apply()
                         val alarmManager = context.getSystemService(AlarmManager::class.java)
@@ -105,8 +90,7 @@ fun StartScreen() {
                         currentTimeInMillis = timeInMillis
                     }
                     isEnable = !isEnable
-                },
-                isEnable = isEnable
+                }, isEnable = isEnable
             )
         }
     }
