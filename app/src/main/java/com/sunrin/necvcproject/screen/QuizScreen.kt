@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -44,12 +42,6 @@ fun QuizScreen(quizList: List<Quiz>, navigate: () -> Unit, sendResult: (Int) -> 
             sendResult(booleanList.count { !it })
             navigate()
         })
-        Button(onClick = {
-            sendResult(0)
-            navigate()
-        }) {
-            Text(text = "Skip~")
-        }
     }) { paddingValues ->
         Column(
             modifier = Modifier

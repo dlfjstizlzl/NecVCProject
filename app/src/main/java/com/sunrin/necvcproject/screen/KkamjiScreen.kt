@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -37,13 +35,11 @@ fun KkamjiScreen(
     val screenHeight = configuration.screenHeightDp.dp
     val scrollState = rememberScrollState()
 
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
-        .padding(12.dp, 22.dp), bottomBar = {
-        Button(onClick = { navigate() }) {
-            Text(text = "Skip~")
-        }
-    }) { paddingValues ->
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(12.dp, 22.dp)
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
