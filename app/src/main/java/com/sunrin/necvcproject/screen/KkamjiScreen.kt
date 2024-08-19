@@ -45,11 +45,11 @@ fun KkamjiScreen(navigate: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp, 22.dp),
-        bottomBar = {
-            Button(onClick = {navigate()}) {
-                Text(text = "Skip~")
-            }
-        }
+//        bottomBar = {
+//            Button(onClick = {navigate()}) {
+//                Text(text = "Skip~")
+//            }
+//        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -57,12 +57,10 @@ fun KkamjiScreen(navigate: () -> Unit) {
                 .padding(paddingValues)
         ) {
             Spacer(modifier = Modifier
-                .height(screenHeight / 15)
-                .background(Color.Black))
+                .height(screenHeight / 15))
             TitleText(text = time.toString())
             Spacer(modifier = Modifier
-                .height(screenHeight / 20)
-                .background(Color.Black))
+                .height(screenHeight / 20))
 
             // Column 사용
             Column(

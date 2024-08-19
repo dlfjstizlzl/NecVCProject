@@ -32,6 +32,7 @@ class ScreenReceiver : BroadcastReceiver() {
                 val alarmIntent = AlarmUtils.createPendingIntent(context)
                 AlarmUtils.createAlarm(alarmManager, alarmIntent, usableTime)
                 lastScreenOn = SystemClock.elapsedRealtime()
+                pref.edit().putLong("lastScreenOn", lastScreenOn!!).apply()
             }
 
             intent.action.equals(Intent.ACTION_SCREEN_OFF) -> {

@@ -37,7 +37,7 @@ fun TitleText(text: String){
             withStyle(style = SpanStyle(color = LocalColorPalette.current.primary.primary)) {
                 append(text+"분")
             }
-            append("지났어요")},
+            append(" 지났어요")},
         style = MaterialTheme.typography.headlineLarge,
     )
 }
@@ -49,7 +49,7 @@ fun ResultText(text: String){
                 withStyle(style = SpanStyle(color = LocalColorPalette.current.primary.primary)) {
                     append(text)
                 }
-                append("맞췄어요!\n")
+                append(" 맞췄어요!\n")
                 withStyle(style = SpanStyle(fontFamily = Pretendard, fontWeight = FontWeight.Medium, fontSize = 18.sp, color = LocalColorPalette.current.text.secondary))
                 {
                     append("홈으로 돌아가요")}
@@ -62,7 +62,7 @@ fun ResultText(text: String){
                 withStyle(style = SpanStyle(color = LocalColorPalette.current.primary.primary)) {
                     append(text+"개")
                 }
-                append("문제를 틀렸어요\n")
+                append(" 문제를 틀렸어요\n")
                 withStyle(style = SpanStyle(fontFamily = Pretendard, fontWeight = FontWeight.Medium, fontSize = 18.sp, color = LocalColorPalette.current.text.secondary))
                 {
                     append("다시 시도해주세요!")}

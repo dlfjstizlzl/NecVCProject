@@ -1,6 +1,7 @@
 package com.sunrin.necvcproject.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,12 +19,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +46,7 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
         isCollect(false)
     }
     var expandedState by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -79,7 +84,8 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
                             LocalColorPalette.current.background.primary,
                             RoundedCornerShape(8.dp)
                         )
-                        .padding(12.dp, 10.dp),
+                        .padding(12.dp, 10.dp)
+                        .focusRequester(focusRequester),
                     textStyle = MaterialTheme.typography.titleLarge.copy(color = LocalColorPalette.current.text.primary),
                     decorationBox = { innerTextField ->
                         if (text == "") {
@@ -89,6 +95,9 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
                         }
                     }
                 )
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
             }
         }
     }
@@ -100,6 +109,7 @@ fun QuizKkamji(scrap: String, answer : String, isCollect: (Boolean) -> Unit) {
     val (text, setText) = remember { mutableStateOf("") }
     isFinished = text != ""
     var expandedState by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -139,7 +149,8 @@ fun QuizKkamji(scrap: String, answer : String, isCollect: (Boolean) -> Unit) {
                             LocalColorPalette.current.background.primary,
                             RoundedCornerShape(8.dp)
                         )
-                        .padding(12.dp, 10.dp),
+                        .padding(12.dp, 10.dp)
+                        .focusRequester(focusRequester),
                     textStyle = MaterialTheme.typography.titleLarge.copy(color = LocalColorPalette.current.text.primary),
                     decorationBox = { innerTextField ->
                         if (text == "") {
@@ -149,6 +160,9 @@ fun QuizKkamji(scrap: String, answer : String, isCollect: (Boolean) -> Unit) {
                         }
                     }
                 )
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
             }
         }
     }

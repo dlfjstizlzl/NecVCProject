@@ -4,8 +4,11 @@ import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,10 +29,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sunrin.necvcproject.alarm.AlarmUtils
+import com.sunrin.necvcproject.alarm.ScreenReceiver.Companion.lastScreenOn
 import com.sunrin.necvcproject.component.CustomButton
 import com.sunrin.necvcproject.component.StartTitle
 import com.sunrin.necvcproject.component.TimePicker
 import kotlinx.coroutines.delay
+import kotlin.math.max
 
 @Preview(showBackground = true)
 @Composable
@@ -37,19 +42,23 @@ fun StartScreen() {
     val context = LocalContext.current
     val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
     val (timeInMillis, setTimeInMillis) = remember { mutableStateOf(pref.getLong("initTime",0)) }
-    var isEnable by remember { mutableStateOf(!(pref.getBoolean("enable",true))) }
+    var isEnable by remember { mutableStateOf(!pref.getBoolean("enable",false)) }
+    var currentTimeInMillis by remember { mutableStateOf(pref.getLong("initTime",0)) }
+
     val configuration = LocalConfiguration.current
-    var currentTimeInMillis by remember { mutableStateOf(0L) }
     val screenHeight = configuration.screenHeightDp.dp
 
     // 타이머 동작
     LaunchedEffect(!isEnable) {
         if (!isEnable) {
-            while (currentTimeInMillis > 0) {
+            while (true) {
+                val lastScreenOn = pref.getLong("lastScreenOn", 0L)
+                val usableTime = pref.getLong("usableTime", 0L)
+                val usedTime = SystemClock.elapsedRealtime() - lastScreenOn
+                var remainTime = max(usableTime - usedTime, 0L)
+                currentTimeInMillis = remainTime
                 delay(1000L) // 1초 대기
-                currentTimeInMillis -= 1000L
-                Log.d("MyTag", "돌아간다~ $currentTimeInMillis")
-                Log.d("MyTag", "고정돼야된다~ 돌아간다~ $timeInMillis")
+//                remainTime -= 1000L
             }
         }
     }
@@ -77,7 +86,7 @@ fun StartScreen() {
             CustomButton(
                 text = "집중모드 시작하기",
                 todo = {
-                    checkOverlayPermission(context)
+                    if(checkOverlayPermission(context)){
                     if (!isEnable) {
                         pref.edit().putBoolean("enable", false).apply()
                         val alarmManager = context.getSystemService(AlarmManager::class.java)
@@ -92,13 +101,16 @@ fun StartScreen() {
                         currentTimeInMillis = timeInMillis
                     }
                     isEnable = !isEnable
+                    }
                 },
                 isEnable = isEnable
             )
         }
     }
 }
-fun checkOverlayPermission(context: Context) {
+fun checkOverlayPermission(context: Context): Boolean {
+    val alarmManager = context.getSystemService(AlarmManager::class.java)
+    var isSuccess = true
     // 오버레이 권한 체크
     if (!Settings.canDrawOverlays(context)) {
         // 권한이 없으면 사용자에게 요청
@@ -107,7 +119,15 @@ fun checkOverlayPermission(context: Context) {
             Uri.fromParts("package", context.packageName, null)
         )
         context.startActivity(intent)
-    } else {
-        // 권한이 이미 있을 경우
+        isSuccess = false
     }
+    //알람 및 리마인더 권한 체
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (!alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            context.startActivity(intent)
+            isSuccess = false
+        }
+    }
+    return isSuccess
 }
