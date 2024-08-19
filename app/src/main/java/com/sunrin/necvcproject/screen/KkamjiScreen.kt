@@ -1,15 +1,12 @@
 package com.sunrin.necvcproject.screen
 
 import android.content.Context
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -21,7 +18,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -30,12 +26,15 @@ import com.sunrin.necvcproject.component.TitleText
 import com.sunrin.necvcproject.data.QuizList
 
 @Composable
-fun KkamjiScreen(navigate: () -> Unit) {
+fun KkamjiScreen(
+    navigate: () -> Unit
+) {
     val context = LocalContext.current
     val pref = context.getSharedPreferences("alarm", Context.MODE_PRIVATE)
     val time = millsToMinutes(pref.getLong("initTime", 0))
     val text by remember { mutableStateOf(QuizList) }
     val booleanList = remember { mutableStateListOf(*Array(text.size) { false }) }
+
 
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -45,11 +44,11 @@ fun KkamjiScreen(navigate: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp, 22.dp),
-//        bottomBar = {
-//            Button(onClick = {navigate()}) {
-//                Text(text = "Skip~")
-//            }
-//        }
+        bottomBar = {
+            Button(onClick = {navigate()}) {
+                Text(text = "Skip~")
+            }
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier

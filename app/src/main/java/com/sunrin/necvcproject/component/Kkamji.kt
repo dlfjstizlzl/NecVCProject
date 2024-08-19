@@ -103,6 +103,14 @@ fun Kkamji(scrap: String, isCollect: (Boolean) -> Unit) {
     }
 }
 
+@Preview
+@Composable
+fun PreviewKkamji() {
+    NecVCProjectTheme {
+        Kkamji(scrap = "test", isCollect = {})
+    }
+}
+
 @Composable
 fun QuizKkamji(scrap: String, answer : String, isCollect: (Boolean) -> Unit) {
     var isFinished by remember { mutableStateOf(false) }

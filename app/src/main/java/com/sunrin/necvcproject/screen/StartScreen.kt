@@ -3,8 +3,10 @@ package com.sunrin.necvcproject.screen
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
 import android.util.Log
@@ -28,12 +30,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.sunrin.necvcproject.alarm.AlarmUtils
 import com.sunrin.necvcproject.alarm.ScreenReceiver.Companion.lastScreenOn
 import com.sunrin.necvcproject.component.CustomButton
 import com.sunrin.necvcproject.component.StartTitle
 import com.sunrin.necvcproject.component.TimePicker
 import kotlinx.coroutines.delay
+import java.security.Permission
+import java.security.Permissions
 import kotlin.math.max
 
 @Preview(showBackground = true)
@@ -86,7 +91,6 @@ fun StartScreen() {
             CustomButton(
                 text = "집중모드 시작하기",
                 todo = {
-                    if(checkOverlayPermission(context)){
                     if (!isEnable) {
                         pref.edit().putBoolean("enable", false).apply()
                         val alarmManager = context.getSystemService(AlarmManager::class.java)
@@ -101,33 +105,9 @@ fun StartScreen() {
                         currentTimeInMillis = timeInMillis
                     }
                     isEnable = !isEnable
-                    }
                 },
                 isEnable = isEnable
             )
         }
     }
-}
-fun checkOverlayPermission(context: Context): Boolean {
-    val alarmManager = context.getSystemService(AlarmManager::class.java)
-    var isSuccess = true
-    // 오버레이 권한 체크
-    if (!Settings.canDrawOverlays(context)) {
-        // 권한이 없으면 사용자에게 요청
-        val intent = Intent(
-            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.fromParts("package", context.packageName, null)
-        )
-        context.startActivity(intent)
-        isSuccess = false
-    }
-    //알람 및 리마인더 권한 체
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (!alarmManager.canScheduleExactAlarms()) {
-            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-            context.startActivity(intent)
-            isSuccess = false
-        }
-    }
-    return isSuccess
 }

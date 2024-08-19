@@ -30,7 +30,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.sunrin.necvcproject.component.CustomButton
 import com.sunrin.necvcproject.component.QuizKkamji
 import com.sunrin.necvcproject.component.ResultButton
 import com.sunrin.necvcproject.component.TitleText
@@ -58,12 +57,12 @@ fun QuizScreen(navigate: () -> Unit, sendResult: (Int) -> Unit) {
                 ResultButton(text = "채점하기", todo = {
                     sendResult(booleanList.count{!it})
                     navigate()})
-//                Button(onClick = {
-//                    sendResult(0)
-//                    navigate()
-//                }) {
-//                    Text(text = "Skip~")
-//                }
+            Button(onClick = {
+                   sendResult(0)
+                    navigate()
+                }) {
+                    Text(text = "Skip~")
+                }
         }
     ){paddingValues ->
         Column (
