@@ -21,7 +21,7 @@ fun OverlayScreen(
         val currentScreen = remember { mutableStateOf("Kkamji") }
         var inCorrect by remember { mutableStateOf(0) }
         val quizList = remember {
-            ProcessedQuizList.shuffled().take(10)
+            ProcessedQuizList.shuffled().take(2)
         }
 
         Surface(modifier = Modifier.fillMaxSize()) {
@@ -29,7 +29,7 @@ fun OverlayScreen(
                 "Kkamji" -> KkamjiScreen(quizList = quizList) { currentScreen.value = "Quiz" }
                 "Quiz" -> QuizScreen(navigate = { currentScreen.value = "Result" },
                     sendResult = { inCorrect = it },
-                    quizList = quizList
+                    quizList = quizList.shuffled().take(1)
                 )
                 "Result" -> ResultScreen(inCorrect,
                     { currentScreen.value = "Kkamji" },
