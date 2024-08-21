@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sunrin.necvcproject.ui.theme.LocalColorPalette
@@ -67,7 +69,8 @@ fun Kkamji(sentence: String, isCollect: (Boolean) -> Unit) {
             }
             if (expandedState) {
                 Spacer(modifier = Modifier.height(12.dp))
-                BasicTextField(value = text,
+                BasicTextField(
+                    value = text,
                     onValueChange = { setText(it) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -83,7 +86,9 @@ fun Kkamji(sentence: String, isCollect: (Boolean) -> Unit) {
                         } else {
                             innerTextField()
                         }
-                    })
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                )
                 LaunchedEffect(Unit) {
                     focusRequester.requestFocus()
                 }
@@ -150,7 +155,8 @@ fun QuizKkamji(scrap: String, answer: String, isCollect: (Boolean) -> Unit) {
                         } else {
                             innerTextField()
                         }
-                    })
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done))
                 LaunchedEffect(Unit) {
                     focusRequester.requestFocus()
                 }
